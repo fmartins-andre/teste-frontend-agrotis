@@ -31,6 +31,13 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.0"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npx prettier --write",
+      "npx eslint --fix --no-error-on-unmatched-pattern"
+    ],
+    "*.{md,html,css}": "npx prettier --write"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
