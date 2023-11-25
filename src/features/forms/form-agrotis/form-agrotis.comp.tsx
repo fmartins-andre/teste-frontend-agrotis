@@ -1,6 +1,6 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { FancyContainer } from "ui/layouts/layout-agrotis/components/fancy-container";
+import { FancyContainer } from "ui/components/fancy-container";
 
 export function FormAgrotis() {
   return (
