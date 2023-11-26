@@ -11,6 +11,11 @@ export function InputAutocomplete({
   ...rest
 }: CommonAutocompleteProps) {
   const { control } = useFormContext<FormAgrotisInputSchema>();
+
+  const { helperText, ...restInput } = renderedInputProps ?? {
+    helperText: undefined,
+  };
+
   return (
     <Controller
       control={control}
@@ -29,8 +34,8 @@ export function InputAutocomplete({
               variant="standard"
               fullWidth
               error={Boolean(error)}
-              helperText={error?.message ?? renderedInputProps?.helperText}
-              {...renderedInputProps}
+              helperText={error?.message ?? helperText}
+              {...restInput}
             />
           )}
         />
