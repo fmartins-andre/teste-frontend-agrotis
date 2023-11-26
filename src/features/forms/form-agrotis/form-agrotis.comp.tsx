@@ -12,8 +12,11 @@ import {
 } from "./form-agrotis.schema";
 import { useSubmitForm } from "./helpers/use-submit-form.hook";
 import { useUpdateCnpj } from "./helpers/use-update-cnpj.hook";
-import { InputDate, InputText } from "./subcomponents/inputs";
-import { InputAutocomplete } from "./subcomponents/inputs/input-autocomplete.comp";
+import {
+  InputAutocomplete,
+  InputDate,
+  InputText,
+} from "./subcomponents/inputs";
 
 export function FormAgrotis() {
   const formMethods = useForm<FormAgrotisInputSchema>({
