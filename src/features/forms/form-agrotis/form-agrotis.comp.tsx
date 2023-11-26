@@ -10,6 +10,7 @@ import {
   FormAgrotisInputSchema,
   formAgrotisSchema,
 } from "./form-agrotis.schema";
+import { useSubmitForm } from "./helpers/use-submit-form.hook";
 import { useUpdateCnpj } from "./helpers/use-update-cnpj.hook";
 import { InputDate, InputText } from "./subcomponents/inputs";
 import { InputAutocomplete } from "./subcomponents/inputs/input-autocomplete.comp";
@@ -22,10 +23,7 @@ export function FormAgrotis() {
 
   useUpdateCnpj(formMethods.watch, formMethods.setValue);
 
-  const handleSubmit = formMethods.handleSubmit(
-    (data) => console.log("onValid: ", data),
-    (error) => console.log("onInvalid: ", error),
-  );
+  const handleSubmit = useSubmitForm(formMethods.handleSubmit);
 
   const { data: labs } = apiClient.getLabs.useQuery(["labs"]);
 
@@ -45,6 +43,7 @@ export function FormAgrotis() {
             Salvar
           </Button>
         </FancyContainer.Header>
+
         <FancyContainer.Body>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
