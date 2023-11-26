@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Autocomplete, Button, Grid, TextField } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
-import { Controller, FormProvider, useForm } from "react-hook-form";
-import { apiClient, IProperty } from "resources/api";
+import { Button, Grid } from "@mui/material";
+import { FormProvider, useForm } from "react-hook-form";
+import { apiClient } from "resources/api";
 import { FancyContainer } from "ui/components/fancy-container";
 import { getParsedObj } from "utils/get-parsed-obj";
 
@@ -11,6 +10,9 @@ import {
   FormAgrotisInputSchema,
   formAgrotisSchema,
 } from "./form-agrotis.schema";
+import { useUpdateCnpj } from "./helpers/use-update-cnpj.hook";
+import { InputDate, InputText } from "./subcomponents/inputs";
+import { InputAutocomplete } from "./subcomponents/inputs/input-autocomplete.comp";
 
 export function FormAgrotis() {
   const formMethods = useForm<FormAgrotisInputSchema>({
@@ -18,17 +20,16 @@ export function FormAgrotis() {
     defaultValues,
   });
 
+  useUpdateCnpj(formMethods.watch, formMethods.setValue);
+
   const handleSubmit = formMethods.handleSubmit(
     (data) => console.log("onValid: ", data),
     (error) => console.log("onInvalid: ", error),
   );
 
-  const { data: labs, isFetching: isFetchingLabs } = apiClient.getLabs.useQuery(
-    ["labs"],
-  );
+  const { data: labs } = apiClient.getLabs.useQuery(["labs"]);
 
-  const { data: properties, isFetching: isFetchingProperties } =
-    apiClient.getProperties.useQuery(["properties"]);
+  const { data: properties } = apiClient.getProperties.useQuery(["properties"]);
 
   return (
     <FormProvider {...formMethods}>
@@ -47,146 +48,43 @@ export function FormAgrotis() {
         <FancyContainer.Body>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Controller
-                control={formMethods.control}
-                name="nome"
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    label="Nome *"
-                    variant="standard"
-                    fullWidth
-                    error={Boolean(error)}
-                    helperText={error?.message}
-                  />
-                )}
-              />
+              <InputText name="nome" label="Nome *" />
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
-              <Controller
-                control={formMethods.control}
-                name="dataInicial"
-                render={({ field, fieldState: { error } }) => (
-                  <DatePicker
-                    {...field}
-                    label="Data Inicial * "
-                    slotProps={{
-                      textField: {
-                        variant: "standard",
-                        fullWidth: true,
-                        error: Boolean(error),
-                        helperText: error?.message,
-                      },
-                    }}
-                  />
-                )}
-              />
+              <InputDate name="dataInicial" label="Data Inicial *" />
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
-              <Controller
-                control={formMethods.control}
-                name="dataFinal"
-                render={({ field, fieldState: { error } }) => (
-                  <DatePicker
-                    {...field}
-                    label="Data Final * "
-                    slotProps={{
-                      textField: {
-                        variant: "standard",
-                        fullWidth: true,
-                        error: Boolean(error),
-                        helperText: error?.message,
-                      },
-                    }}
-                  />
-                )}
-              />
+              <InputDate name="dataFinal" label="Data Final *" />
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Controller
-                control={formMethods.control}
+              <InputAutocomplete
                 name="infosPropriedade"
-                render={({ field, fieldState: { error } }) => (
-                  <Autocomplete
-                    {...field}
-                    disableClearable
-                    value={field.value}
-                    loading={isFetchingProperties}
-                    getOptionLabel={(option) => option.nome ?? ""}
-                    options={getParsedObj(properties?.body) ?? []}
-                    onChange={(_, value) => {
-                      if (value) {
-                        formMethods.setValue(
-                          "cnpj",
-                          (value as unknown as IProperty).cnpj,
-                        );
-                      }
-                      field.onChange(value);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Propriedades *"
-                        variant="standard"
-                        fullWidth
-                        error={Boolean(error)}
-                        helperText={error?.message}
-                      />
-                    )}
-                  />
-                )}
+                label="Propriedades *"
+                disableClearable
+                getOptionLabel={(option) => option.nome ?? ""}
+                options={getParsedObj(properties?.body) ?? []}
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Controller
-                control={formMethods.control}
+              <InputAutocomplete
                 name="laboratorio"
-                render={({ field, fieldState: { error } }) => (
-                  <Autocomplete
-                    {...field}
-                    disableClearable
-                    value={field.value}
-                    loading={isFetchingLabs}
-                    getOptionLabel={(option) => option.nome ?? ""}
-                    options={getParsedObj(labs?.body) ?? []}
-                    onChange={(_, value) => {
-                      field.onChange(value);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Laboratório *"
-                        variant="standard"
-                        fullWidth
-                        error={Boolean(error)}
-                        helperText={error?.message}
-                      />
-                    )}
-                  />
-                )}
+                label="Laboratório *"
+                disableClearable
+                getOptionLabel={(option) => option.nome ?? ""}
+                options={getParsedObj(labs?.body) ?? []}
               />
             </Grid>
 
             <Grid item xs={12}>
-              <Controller
-                control={formMethods.control}
+              <InputText
                 name="observacoes"
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    label="Observações"
-                    variant="standard"
-                    multiline
-                    minRows={5}
-                    fullWidth
-                    error={Boolean(error)}
-                    helperText={error?.message}
-                  />
-                )}
+                label="Observações"
+                multiline
+                minRows={5}
               />
             </Grid>
           </Grid>
