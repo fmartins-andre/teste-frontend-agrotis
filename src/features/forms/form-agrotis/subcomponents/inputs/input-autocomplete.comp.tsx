@@ -29,7 +29,7 @@ export function InputAutocomplete({
               variant="standard"
               fullWidth
               error={Boolean(error)}
-              helperText={error?.message}
+              helperText={error?.message ?? renderedInputProps?.helperText}
               {...renderedInputProps}
             />
           )}

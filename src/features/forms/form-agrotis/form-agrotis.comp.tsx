@@ -21,6 +21,8 @@ export function FormAgrotis() {
     defaultValues,
   });
 
+  const cnpjWatch = formMethods.watch("cnpj");
+
   useUpdateCnpj(formMethods.watch, formMethods.setValue);
 
   const handleSubmit = useSubmitForm(formMethods.handleSubmit);
@@ -47,7 +49,11 @@ export function FormAgrotis() {
         <FancyContainer.Body>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <InputText name="nome" label="Nome *" />
+              <InputText
+                name="nome"
+                label="Nome *"
+                inputProps={{ maxLength: 40 }}
+              />
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
@@ -65,6 +71,9 @@ export function FormAgrotis() {
                 disableClearable
                 getOptionLabel={(option) => option.nome ?? ""}
                 options={getParsedObj(properties?.body) ?? []}
+                renderedInputProps={{
+                  helperText: cnpjWatch ? `CNPJ: ${cnpjWatch}` : undefined,
+                }}
               />
             </Grid>
 
@@ -84,6 +93,7 @@ export function FormAgrotis() {
                 label="Observações"
                 multiline
                 minRows={5}
+                inputProps={{ maxLength: 1000 }}
               />
             </Grid>
           </Grid>
